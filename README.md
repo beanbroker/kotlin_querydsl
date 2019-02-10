@@ -1,12 +1,6 @@
 kotlin_querydsl
 
 
----
-title: Kotlin, Querydsl 1장
-date: 2019-02-10 21:30:00
-tags: ["Kotlin", "Querydsl"]
-categories: ["Kotlin", "Querydsl"]
----
 
 
 ## Querydsl with Kotlin 
