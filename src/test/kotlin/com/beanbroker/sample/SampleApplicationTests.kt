@@ -4,6 +4,7 @@ package com.beanbroker.sample
 import com.beanbroker.sample.entity.UserEntity
 import com.beanbroker.sample.service.UserCreateService
 import com.beanbroker.sample.service.UserGetService
+import com.beanbroker.sample.service.UserUpdateService
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.springframework.beans.factory.annotation.Autowired
@@ -20,6 +21,9 @@ class SampleApplicationTests {
 
 	@Autowired
 	private lateinit var userCreateService: UserCreateService
+
+	@Autowired
+	private lateinit var userUpdateService: UserUpdateService
 
 
 	@Test
@@ -46,6 +50,25 @@ class SampleApplicationTests {
 		 userGetService.getUserBySeq(42)
 
 	}
+
+
+	@Test
+	fun auditTest() {
+
+
+		userUpdateService.updateUser(
+
+            userGetService.getUserBySeq(42)?.apply {
+
+                age=100
+            }!!
+
+
+		)
+
+	}
+
+
 
 }
 
