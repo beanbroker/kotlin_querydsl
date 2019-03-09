@@ -276,3 +276,104 @@ class SampleApplicationTests {
 
 
 아... 공부할게 너무많은데... 다음에... audit관련...을 2장으로.. 코루틴은... 나중에..
+
+
+------------------------
+
+
+## Kotlin, Querydsl 2장 (JPA Auditing)
+
+Audit의 사전적 의미 감사(고마움을..표시하는 그런뜻이..아닌...)
+
+1장에서 유저 Entity에 @CreatedBy, @LastModifiedBy를 이어서 카즈아!!
+
+말그대로 누구에 의해 만들어졌는지, 누구에 의해 수정되었는지를 뜻한다. 
+
+* Declares a field as the one representing the principal that created the entity containing the field.
+* Declares a field as the one representing the date the entity containing the field was recently modified.
+
+
+어떻게 사용하면 좋을가?
+
+예를들어 하나의 DB를 바라보며 서비스 어플리케이션, 배치 어플리케이션, 관리용 어플리케이션이 떠 있을 경우 DB의 변경을 어디서 했는지 로그를 보지 않고서는 알수가 없다.(물론 디비로그 설정이나 다른 방법으로도 풀수 있다! aws에서 버튼 몇번 누르면 되는 충격적인...)
+
+만약 Audit을 사용하게 된다면 어디서 만들어졌는지 어디서 변경되었는지 쉽게 찾을수 있다. 또한 최대한 DB는 DB담당자가 아닌 개발자들이 절대 직접 핸들링하면 안되는 곳이라 생각된다.
+
+
+### 샘플소스
+
+> UserEntity 
+
+```java
+
+@Entity(name = "users")
+@EntityListeners(AuditingEntityListener::class)
+class UserEntity{
+
+    @Id
+    @Column(name = "seq")
+    var seq = 0
+
+    @Column(name = "name")
+    var name = ""
+
+    @Column(name = "age")
+    var age = 0
+
+    @Column(name = "gender")
+    var gender = ""
+
+
+    @CreatedDate
+    @Column(name = "created_at" , nullable = false, updatable = false,  columnDefinition = "DATE")
+    var createdAt  : LocalDateTime = LocalDateTime.now()
+
+    @CreatedBy
+    @Column(name = "created_by")
+    var createdBy = ""
+
+    @LastModifiedDate
+    @Column(name = "updated_at", columnDefinition = "DATE")
+    var updatedAt  : LocalDateTime = LocalDateTime.now()
+
+    @LastModifiedBy
+    @Column(name = "updated_by")
+    var updateBy = ""
+
+
+}
+```
+
+> AuditConfig 
+
+```java
+@Configuration
+@EnableJpaAuditing(modifyOnCreate = false)
+class AuditConfig{
+
+}
+```
+
+> BeanbrokerAuditor
+
+```java
+@Component("beanbrokerAuditor")
+class BeanbrokerAuditor : AuditorAware<String> {
+
+    override fun getCurrentAuditor(): Optional<String> {
+
+        return Optional.of("SampleServer")
+    }
+
+}
+```
+
+위와 같이 설정을 하게되면 생성 또는 수정시 create_by, updated_by에 SampleServer가 들어간다!. 테스트는 생성, 업데이트, 삭제시 동일하게 작동한다. 테스트 코드를 디버깅하면서 db를 확인하게 되면 파악할수 있다!
+
+
+
+
+3장에서는 조인!!! queryDsl조인을 알아보자
+
+
+
