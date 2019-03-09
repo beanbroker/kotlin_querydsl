@@ -1,4 +1,4 @@
-package com.beanbroker.sample.service
+package com.beanbroker.sample.service.user
 
 import com.beanbroker.sample.entity.UserEntity
 import com.beanbroker.sample.repository.UserRepository
