@@ -376,4 +376,285 @@ class BeanbrokerAuditor : AuditorAware<String> {
 3장에서는 조인!!! queryDsl조인을 알아보자
 
 
+----------------------
+
+
+
+## Kotlin, Querydsl 3장 (Predicate)
+
+3장에서 조인을 시작해야햇지만,..... 게으른 탓에 까먹고 있었던것은 함정! 4장에..이어서 할게요...
+
+
+쿼리 조건을 지정하는 predicate 객체를 사용해보자!
+
+서비스를 개발 또는 어떠한 개발을 진행하다보면 동적쿼리가 필요할수 밖에 없다.
+
+client에서 다양한 다이나믹한 조건을 감당할수 있는 방법은 여러가지가 있지만!
+
+요구사항마다 function을 만들다보면... 쓸데없이.. 비슷한 기능을 담당하는 코드들이 너무 커지는게 아닐가... 라는 생각을 하며 이번장을 시작한다
+
+
+[소스 참고] : https://github.com/beanbroker/kotlin_querydsl
+
+## 샘플소스 작성
+
+약관동의를 했는지 안했는지 관련한 디비를 만들어서! 테스트를 진행해보장
+
+```sql
+
+CREATE TABLE `user_terms` (
+  `seq` int(11) NOT NULL,
+  `first_term` varchar(1) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'N',
+  `second_term` varchar(1) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'N',
+  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
+  `created_by` varchar(45) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `updated_by` varchar(45) COLLATE utf8_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`seq`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci
+
+```
+
+
+
+
+
+> UserTermEntity
+
+```java
+
+@Entity(name = "user_terms")
+@EntityListeners(AuditingEntityListener::class)
+class UserTermEntity{
+
+    @Id
+    @Column(name = "seq")
+    var seq = 0
+
+    @Column(name = "first_term")
+    var firstTerm : Char = 'N'
+
+    @Column(name = "second_term")
+    var secondTerm : Char = 'N'
+
+    @CreatedDate
+    @Column(name = "created_at" , nullable = false, updatable = false,  columnDefinition = "DATE")
+    var createdAt  : LocalDateTime = LocalDateTime.now()
+
+    @CreatedBy
+    @Column(name = "created_by")
+    var createdBy = ""
+
+    @LastModifiedDate
+    @Column(name = "updated_at", columnDefinition = "DATE")
+    var updatedAt  : LocalDateTime = LocalDateTime.now()
+
+    @LastModifiedBy
+    @Column(name = "updated_by")
+    var updateBy = ""
+
+
+}
+```
+
+> UserTermRepository
+
+```java
+
+interface UserTermRepositoryCustom{
+
+    fun getByPredicator(predicate: Predicate): UserTermEntity?
+    fun findAllByPredicator(predicate: Predicate): List<UserTermEntity>?
+
+}
+
+interface UserTermRepository : JpaRepository<UserTermEntity, Int>, UserTermRepositoryCustom
+
+class UserTermRepositoryImpl :
+    QuerydslRepositorySupport(UserTermEntity::class.java),UserTermRepositoryCustom{
+
+
+    override fun getByPredicator(predicate: Predicate): UserTermEntity? {
+
+        val table = QUserTermEntity.userTermEntity
+        return from(table)
+            .where(predicate)
+            .fetchOne()
+    }
+
+
+    override fun findAllByPredicator(predicate: Predicate): List<UserTermEntity>? {
+
+        val table = QUserTermEntity.userTermEntity
+        return from(table)
+            .where(predicate)
+            .fetch()
+
+    }
+
+
+}
+
+
+```
+
+> UserTermPredicator
+
+```java
+
+class UserTermPredicator{
+
+    companion object {
+        private val table = QUserTermEntity.userTermEntity
+        private const val SEPARATOR = ","
+        private val AGREEMENT_YN = charArrayOf('Y', 'N', 'R')
+    }
+
+    private var builder = BooleanBuilder()
+
+
+    fun seq(seq: Int?): UserTermPredicator {
+        if (seq != null && seq > 0)
+            builder.and(table.seq.eq(seq))
+        return this
+    }
+
+
+    fun firstTerm(firstTerm: String?): UserTermPredicator {
+        if (firstTerm.isNullOrEmpty()) return this
+        if (firstTerm.contains(SEPARATOR)) {
+            val condition = firstTerm.split(SEPARATOR)
+                .filter { v -> v.isNotEmpty() && firstTerm.contains(v.single()) }
+                .map { v -> v.single() }
+            if (condition.isEmpty()) return this
+            builder.and(table.firstTerm.`in`(condition))
+        } else {
+            if (AGREEMENT_YN.contains(firstTerm.first())) builder.and(table.firstTerm.eq(firstTerm.first()))
+        }
+        return this
+    }
+
+
+
+    fun secondTerm(secondTerm: String?): UserTermPredicator {
+        if (secondTerm.isNullOrEmpty()) return this
+        if (secondTerm.contains(SEPARATOR)) {
+            val condition = secondTerm.split(SEPARATOR)
+                .filter { v -> v.isNotEmpty() && secondTerm.contains(v.single()) }
+                .map { v -> v.single() }
+            if (condition.isEmpty()) return this
+            builder.and(table.firstTerm.`in`(condition))
+        } else {
+            if (AGREEMENT_YN.contains(secondTerm.first())) builder.and(table.secondTerm.eq(secondTerm.first()))
+        }
+        return this
+    }
+
+    fun value() = builder.value!!
+
+
+}
+```
+
+위처럼 작성한 후!
+
+```java
+ fun getByPredicator(predicate: Predicate): UserTermEntity?
+```
+를 주목하자
+
+Predicate 관련 내용 : http://www.querydsl.com/static/querydsl/3.7.2/reference/ko-KR/html/ch03.html
+
+공식 사이트를 참고하자!
+
+
+>  BooleanBuilder()
+
+복합 불리언 표현식을 작성하려면 com.mysema.query.BooleanBuilder 클래스를 사용한다. 이 클래스는 Predicate을 구현하고 있고 메서드 체인 형식으로 사용할 수 있다
+
+서비스 코드를 짜야한다!
+
+```java
+
+
+@Service
+class UserTermService (
+
+    private val userTermRepository: UserTermRepository
+){
+
+
+    fun save(seq:Int, firstTerm: Char, secondTerm: Char){
+
+
+
+        userTermRepository.save(
+            UserTermEntity().apply {
+                this.seq = seq
+                this.firstTerm = firstTerm
+                this.secondTerm = secondTerm
+
+            }
+        )
+    }
+
+    fun getUserTermByPredicator(seq : Int, firstTerm : String, secondTerm : String): UserTermEntity? {
+
+
+        return userTermRepository.getByPredicator( setUserTermPredicator(
+            seq = seq,
+            firstTerm = firstTerm,
+            secondTerm = secondTerm)
+        )
+
+    }
+
+
+    private fun setUserTermPredicator(seq: Int, firstTerm: String, secondTerm: String)
+     : Predicate{
+
+        return UserTermPredicator()
+            .seq(seq)
+            .firstTerm(firstTerm)
+            .secondTerm(secondTerm)
+            .value()
+    }
+
+
+}
+```
+
+프리디케이터를 직접 셋팅하여 원하는 조건에 맞는 데이터를 찾게된다.
+
+쭈욱 보면 너무나도 당연하게 빌더패턴임을 즉각적으로 알수있다. 매우 많은곳에서 신경쓰지 않는 부분에서 빌더패턴이 적용되어있음을 주의깊게 보게될경우! 찾을수 있다.(유용유용)
+
+
+## 실제 테스트를 진행해보자
+
+```java
+@Test
+	fun termTest1() {
+
+
+		var test = userTermService.getUserTermByPredicator(
+			seq = 1,
+			firstTerm = "N",
+			secondTerm = "Y"
+		)
+
+
+        assertNotNull("데이터가 있는지?", test)
+        assertEquals("첫번째 약관이 맞는지?", 'N', test!!.firstTerm)
+        assertEquals("두번째 약관이 맞는지?", 'Y', test.secondTerm)
+        println(test.toString())
+
+	}
+```
+
+
+## 결론
+
+아 이얼마나 아름다운 동적쿼리를 수행할수 있는가! 통계에서도 많이 쓰일수 있을뿐더러! 조건에 맞게 빌더에서 설정하게 한다면! 간단해진다!
+
+만약 db에 필드가 더 생길 경우 쉽고 빠르게 대응 할수 있다 생각되어진다! 
 
