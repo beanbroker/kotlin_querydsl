@@ -10,8 +10,8 @@ class UserCreateService(
 
 ){
 
-    fun saveUser(userEntity: UserEntity){
-        userRepository.save(userEntity)
+    fun saveUser(userEntity: UserEntity): UserEntity {
+        return userRepository.save(userEntity)
     }
 
 }

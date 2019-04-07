@@ -14,14 +14,15 @@ class UserTermService (
 ){
 
 
-    fun save(seq:Int, firstTerm: Char, secondTerm: Char){
+    fun save(userId:String, firstTerm: Char, secondTerm: Char){
 
 
 
         userTermRepository.save(
             UserTermEntity().apply {
-                this.seq = seq
+
                 this.firstTerm = firstTerm
+                this.userId = userId
                 this.secondTerm = secondTerm
 
             }

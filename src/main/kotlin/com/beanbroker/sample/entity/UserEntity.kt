@@ -28,6 +28,12 @@ class UserEntity{
     @Column(name = "gender")
     var gender = ""
 
+    @Column(name = "user_Id")
+    var userId = ""
+
+
+    @Column(name = "email")
+    var email = ""
 
     @CreatedDate
     @Column(name = "created_at" , nullable = false, updatable = false,  columnDefinition = "DATE")

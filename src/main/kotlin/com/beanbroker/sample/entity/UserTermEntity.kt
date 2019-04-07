@@ -19,6 +19,11 @@ class UserTermEntity{
     @Column(name = "seq")
     var seq = 0
 
+
+    @Column(name = "user_Id")
+    var userId = ""
+
+
     @Column(name = "first_term")
     var firstTerm : Char = 'N'
 

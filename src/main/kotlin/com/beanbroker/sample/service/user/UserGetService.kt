@@ -27,4 +27,10 @@ class UserGetService(
 
     }
 
+
+    fun getUserEmailList(): MutableList<String>? {
+
+
+        return userRepository.getUserEmailList()
+    }
 }

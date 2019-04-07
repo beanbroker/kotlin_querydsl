@@ -1,7 +1,7 @@
 package com.beanbroker.sample
 
 
-import com.beanbroker.sample.domain.User
+import com.beanbroker.sample.domain.*
 import com.beanbroker.sample.entity.UserEntity
 import com.beanbroker.sample.service.user.UserCreateService
 import com.beanbroker.sample.service.user.UserGetService
@@ -14,9 +14,11 @@ import org.junit.runner.RunWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.junit4.SpringRunner
+import java.util.*
+import kotlin.random.Random
 
-//@RunWith(SpringRunner::class)
-//@SpringBootTest
+@RunWith(SpringRunner::class)
+@SpringBootTest
 class SampleApplicationTests {
 
 
@@ -34,6 +36,27 @@ class SampleApplicationTests {
 
 
     @Test
+    fun testRe(){
+
+
+        val a = BlueBall()
+
+
+        a.javaClass.declaredFields.forEach {
+            println(it.name)
+        }
+
+        a.javaClass.declaredMethods.forEach {
+            println(it.name)
+        }
+
+
+
+    }
+
+
+
+    @Test
     fun queryDslTest() {
 
 
@@ -42,6 +65,8 @@ class SampleApplicationTests {
             this.name = "박기진"
             this.age = 20
             this.gender = "M"
+            this.userId = "tes"
+            this.email = "te@saf.com"
         })
 
 
@@ -175,6 +200,75 @@ class SampleApplicationTests {
 
     }
 
+
+    @Test
+    fun joinTestForGetListOfEmail(){
+
+//
+//        var i = 100
+//
+//        for (x in  0..10){
+//
+//
+//            UserEntity().apply {
+//                this.userId = UUID.randomUUID().toString()
+//                this.name = "pkj" + i.toString()
+//                this.age = 25
+//                this.email = this.userId + "@gmail.com"
+//                this.gender = "M"
+//
+//
+//            }.run {
+//                var  b = userCreateService.saveUser(this)
+//
+//                userTermService.save( b.userId, 'Y', 'N')
+//            }
+//
+//            userCreateService.saveUser(UserEntity().apply {
+//                this.userId = UUID.randomUUID().toString()
+//                this.name = "pkj" + i.toString()
+//                this.age = 25
+//                this.email = this.userId + "@gmail.com"
+//                this.gender = "M"
+//
+//
+//            })
+//
+//
+//            i++
+//
+//        }
+
+        val userEmailList = userGetService.getUserEmailList()
+
+        println(userEmailList.toString())
+
+
+    }
+
+
+    @Test
+    fun abcTest(){
+
+
+        val blueBox = RandomBallBox()
+        val yellowBox = RandomBallBox()
+
+        blueBox.ball = BlueBall()
+        yellowBox.ball = YellowBall()
+
+
+        val blueBall = blueBox.ball
+        val yellowBall = yellowBox.ball
+
+
+        println(blueBall)
+        println(yellowBall)
+
+
+
+
+    }
 
 }
 
