@@ -1,4 +1,4 @@
-package com.beanbroker.sample.repository
+package com.beanbroker.sample.api.user.repository
 
 import com.beanbroker.sample.entity.QUserTermEntity
 import com.beanbroker.sample.api.user.entity.UserTermEntity
@@ -18,7 +18,7 @@ interface UserTermRepositoryCustom{
 interface UserTermRepository : JpaRepository<UserTermEntity, Int>, UserTermRepositoryCustom
 
 class UserTermRepositoryImpl :
-    QuerydslRepositorySupport(UserTermEntity::class.java),UserTermRepositoryCustom{
+    QuerydslRepositorySupport(UserTermEntity::class.java), UserTermRepositoryCustom {
 
 
     override fun getByPredicator(predicate: Predicate): UserTermEntity? {

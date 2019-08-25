@@ -1,8 +1,8 @@
-package com.beanbroker.sample.api.service.user
+package com.beanbroker.sample.api.user.service
 
-import com.beanbroker.sample.entity.UserTermEntity
-import com.beanbroker.sample.repository.UserTermPredicator
-import com.beanbroker.sample.repository.UserTermRepository
+import com.beanbroker.sample.api.user.entity.UserTermEntity
+import com.beanbroker.sample.api.user.repository.UserTermPredicator
+import com.beanbroker.sample.api.user.repository.UserTermRepository
 import com.querydsl.core.types.Predicate
 import org.springframework.stereotype.Service
 

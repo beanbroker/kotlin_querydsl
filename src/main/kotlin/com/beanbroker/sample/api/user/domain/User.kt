@@ -1,4 +1,4 @@
-package com.beanbroker.sample.domain
+package com.beanbroker.sample.api.user.domain
 
 data class User(
 

@@ -1,4 +1,4 @@
-package com.beanbroker.sample.repository
+package com.beanbroker.sample.api.user.repository
 
 import com.beanbroker.sample.entity.QUserEntity
 import com.beanbroker.sample.entity.QUserTermEntity

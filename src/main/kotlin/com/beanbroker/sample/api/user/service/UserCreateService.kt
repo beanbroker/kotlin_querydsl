@@ -1,8 +1,9 @@
-package com.beanbroker.sample.api.service.user
+package com.beanbroker.sample.api.user.service
 
-import com.beanbroker.sample.entity.UserEntity
-import com.beanbroker.sample.repository.UserRepository
+import com.beanbroker.sample.api.user.entity.UserEntity
+import com.beanbroker.sample.api.user.repository.UserRepository
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 @Service
 class UserCreateService(
@@ -10,6 +11,7 @@ class UserCreateService(
 
 ){
 
+    @Transactional
     fun saveUser(userEntity: UserEntity): UserEntity {
         return userRepository.save(userEntity)
     }

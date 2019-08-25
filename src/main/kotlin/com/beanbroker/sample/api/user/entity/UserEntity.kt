@@ -1,21 +1,19 @@
-package com.beanbroker.sample.entity
+package com.beanbroker.sample.api.user.entity
 
+import com.beanbroker.sample.global.entity.BaseEntity
 import org.springframework.data.annotation.CreatedBy
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedBy
 import org.springframework.data.annotation.LastModifiedDate
 import org.springframework.data.jpa.domain.support.AuditingEntityListener
 import java.time.LocalDateTime
-import javax.persistence.Column
-import javax.persistence.Entity
-import javax.persistence.EntityListeners
-import javax.persistence.Id
+import javax.persistence.*
 
 @Entity(name = "users")
-@EntityListeners(AuditingEntityListener::class)
-class UserEntity{
+class UserEntity : BaseEntity() {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "seq")
     var seq = 0
 
@@ -34,22 +32,5 @@ class UserEntity{
 
     @Column(name = "email")
     var email = ""
-
-    @CreatedDate
-    @Column(name = "created_at" , nullable = false, updatable = false,  columnDefinition = "DATE")
-    var createdAt  : LocalDateTime = LocalDateTime.now()
-
-    @CreatedBy
-    @Column(name = "created_by")
-    var createdBy = ""
-
-    @LastModifiedDate
-    @Column(name = "updated_at", columnDefinition = "DATE")
-    var updatedAt  : LocalDateTime = LocalDateTime.now()
-
-    @LastModifiedBy
-    @Column(name = "updated_by")
-    var updateBy = ""
-
 
 }
