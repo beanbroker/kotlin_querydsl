@@ -1,17 +1,17 @@
-package com.beanbroker.sample.service.user
+package com.beanbroker.sample.api.service.user
 
 import com.beanbroker.sample.entity.UserEntity
 import com.beanbroker.sample.repository.UserRepository
 import org.springframework.stereotype.Service
 
 @Service
-class UserUpdateService(
+class UserCreateService(
     private val userRepository: UserRepository
 
 ){
 
-    fun updateUser(userEntity: UserEntity){
-        userRepository.save(userEntity)
+    fun saveUser(userEntity: UserEntity): UserEntity {
+        return userRepository.save(userEntity)
     }
 
 }

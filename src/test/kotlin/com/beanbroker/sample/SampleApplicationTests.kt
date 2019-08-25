@@ -1,12 +1,12 @@
 package com.beanbroker.sample
 
 
-import com.beanbroker.sample.domain.*
-import com.beanbroker.sample.entity.UserEntity
-import com.beanbroker.sample.service.user.UserCreateService
-import com.beanbroker.sample.service.user.UserGetService
-import com.beanbroker.sample.service.user.UserUpdateService
-import com.beanbroker.sample.service.userterm.UserTermService
+import com.beanbroker.sample.api.user.domain.User
+import com.beanbroker.sample.api.user.entity.UserEntity
+import com.beanbroker.sample.api.user.service.UserCreateService
+import com.beanbroker.sample.api.user.service.UserGetService
+import com.beanbroker.sample.api.user.service.UserUpdateService
+import com.beanbroker.sample.api.user.service.UserTermService
 import junit.framework.Assert.assertEquals
 import junit.framework.Assert.assertNotNull
 import org.junit.Test
@@ -14,8 +14,6 @@ import org.junit.runner.RunWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.junit4.SpringRunner
-import java.util.*
-import kotlin.random.Random
 
 @RunWith(SpringRunner::class)
 @SpringBootTest
@@ -36,25 +34,19 @@ class SampleApplicationTests {
 
 
     @Test
-    fun testRe(){
+    fun createUser(){
 
+        userCreateService.saveUser(userEntity = UserEntity().apply {
 
-        val a = BlueBall()
-
-
-        a.javaClass.declaredFields.forEach {
-            println(it.name)
-        }
-
-        a.javaClass.declaredMethods.forEach {
-            println(it.name)
-        }
-
+            this.name = "박기진"
+            this.age = 20
+            this.gender = "M"
+            this.userId = "tes"
+            this.email = "te@saf.com"
+        })
 
 
     }
-
-
 
     @Test
     fun queryDslTest() {
@@ -89,10 +81,10 @@ class SampleApplicationTests {
 
         userUpdateService.updateUser(
 
-            userGetService.getUserBySeq(42)?.apply {
+                userGetService.getUserBySeq(42)?.apply {
 
-                age = 100
-            }!!
+                    age = 100
+                }!!
 
 
         )
@@ -105,9 +97,9 @@ class SampleApplicationTests {
 
 
         var test = userTermService.getUserTermByPredicator(
-            seq = 1,
-            firstTerm = "N",
-            secondTerm = "Y"
+                seq = 1,
+                firstTerm = "N",
+                secondTerm = "Y"
         )
 
 
@@ -142,12 +134,12 @@ class SampleApplicationTests {
 
         val users = listOf<User>(
 
-            User("pkj", 30),
-            User("beanbroker", 40),
-            User("A", 32),
-            User("B", 27),
-            User("C", 44),
-            User("D", 30)
+                User("pkj", 30),
+                User("beanbroker", 40),
+                User("A", 32),
+                User("B", 27),
+                User("C", 44),
+                User("D", 30)
 
         )
 
@@ -155,10 +147,9 @@ class SampleApplicationTests {
         println(listOfOverThirtyFive.toString())
 
 
-        val mapOfOverThirtyFive = users.filter { it.age > 35}.map { it.name }
+        val mapOfOverThirtyFive = users.filter { it.age > 35 }.map { it.name }
 
         println(mapOfOverThirtyFive.toString())
-
 
 
 //        val isOlderThan50 = users.all { it.age > 50 }
@@ -190,19 +181,16 @@ class SampleApplicationTests {
 //        println(someoneWhoseAgeis26.toString())
 
 
-
-
         val userGroup = users.groupBy { it.age }.toList()
 
         println(userGroup.toString())
-
 
 
     }
 
 
     @Test
-    fun joinTestForGetListOfEmail(){
+    fun joinTestForGetListOfEmail() {
 
 //
 //        var i = 100
@@ -242,30 +230,6 @@ class SampleApplicationTests {
         val userEmailList = userGetService.getUserEmailList()
 
         println(userEmailList.toString())
-
-
-    }
-
-
-    @Test
-    fun abcTest(){
-
-
-        val blueBox = RandomBallBox()
-        val yellowBox = RandomBallBox()
-
-        blueBox.ball = BlueBall()
-        yellowBox.ball = YellowBall()
-
-
-        val blueBall = blueBox.ball
-        val yellowBall = yellowBox.ball
-
-
-        println(blueBall)
-        println(yellowBall)
-
-
 
 
     }

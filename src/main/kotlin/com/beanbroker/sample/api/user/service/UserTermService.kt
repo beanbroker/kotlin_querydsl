@@ -1,4 +1,4 @@
-package com.beanbroker.sample.service.userterm
+package com.beanbroker.sample.api.service.user
 
 import com.beanbroker.sample.entity.UserTermEntity
 import com.beanbroker.sample.repository.UserTermPredicator
