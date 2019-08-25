@@ -658,3 +658,120 @@ class UserTermService (
 
 만약 db에 필드가 더 생길 경우 쉽고 빠르게 대응 할수 있다 생각되어진다! 
 
+
+
+
+
+# Kotlin, Querydsl 5장 (JPA Auditing) 추가 분
+
+
+[코틀린 2장 audit ](https://beanbroker.github.io/2019/02/13/Kotlin/kotlin_queryDsl2/) 기존 audit 관련 링크
+
+[git source](https://github.com/beanbroker/kotlin_querydsl) 샘플소스 링크
+
+
+## 기존 코드의 문제점
+
+아래오 같이 모든 enitiy에 createdAt, updatedAy, etc..등이 모두 붙어있다.. 해당 부분만을 빼보자 코드를 중복할수 없지 아니한가!
+
+> 기존 코드
+
+```java
+@Entity(name = "users")
+@EntityListeners(AuditingEntityListener::class)
+class UserEntity{
+
+    @Id
+    @Column(name = "seq")
+    var seq = 0
+
+    @Column(name = "name")
+    var name = ""
+
+    @Column(name = "age")
+    var age = 0
+
+    @Column(name = "gender")
+    var gender = ""
+
+
+    @CreatedDate
+    @Column(name = "created_at" , nullable = false, updatable = false,  columnDefinition = "DATE")
+    var createdAt  : LocalDateTime = LocalDateTime.now()
+
+    @CreatedBy
+    @Column(name = "created_by")
+    var createdBy = ""
+
+    @LastModifiedDate
+    @Column(name = "updated_at", columnDefinition = "DATE")
+    var updatedAt  : LocalDateTime = LocalDateTime.now()
+
+    @LastModifiedBy
+    @Column(name = "updated_by")
+    var updateBy = ""
+
+
+}
+
+```
+
+> 변경 코드
+
+```java
+@Entity(name = "users")
+class UserEntity : BaseEntity() {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "seq")
+    var seq = 0
+
+    @Column(name = "name")
+    var name = ""
+
+    @Column(name = "age")
+    var age = 0
+
+    @Column(name = "gender")
+    var gender = ""
+
+    @Column(name = "user_Id")
+    var userId = ""
+
+
+    @Column(name = "email")
+    var email = ""
+
+}
+
+
+@EntityListeners(value = [AuditingEntityListener::class])
+@MappedSuperclass
+abstract class BaseEntity{
+
+    @CreatedBy
+    @Column(name = "created_by", length = 15)
+    var createBy: String? = null
+
+    @CreatedDate
+    @Column(name = "created_at" , nullable = false, updatable = false,  columnDefinition = "DATE")
+    var createdAt: LocalDateTime? = null
+
+    @LastModifiedDate
+    @Column(name = "updated_at", columnDefinition = "DATE")
+    var updatedAt  : LocalDateTime = LocalDateTime.now()
+
+    @LastModifiedBy
+    @Column(name = "updated_by", length = 15)
+    var updateBy: String? = null
+}
+
+```
+
+누구든.. 쉽게 이해가 가능!
+
+@MappedSuperclass ->  맵핑되는 정보만 제공하고 싶을때 더 자세한 내용은 영어로 된글을 읽으면 이해가 됩니다. 
+
+
+스프링 시큐리티 없이 권한 부여 및 회원가입 진행해보기 프로젝트를 해당 프로젝트에 이어서 할예정!
