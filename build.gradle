@@ -54,6 +54,12 @@ dependencies {
 
 	implementation("com.auth0:java-jwt:3.8.1")
 
+	//redis
+
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+//	implementation 'redis.clients:jedis'
+	compile group: 'it.ozimov', name: 'embedded-redis', version: '0.7.2'
+
 }
 
 compileKotlin {
