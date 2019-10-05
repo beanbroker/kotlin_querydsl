@@ -50,6 +50,10 @@ dependencies {
 
 	compile("com.querydsl:querydsl-jpa:${queryDslVersion}")
 	kapt("com.querydsl:querydsl-apt:${queryDslVersion}:jpa")
+
+
+	implementation("com.auth0:java-jwt:3.8.1")
+
 }
 
 compileKotlin {

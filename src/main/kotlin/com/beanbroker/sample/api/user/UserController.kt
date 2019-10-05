@@ -33,4 +33,12 @@ class UserController(
 //            this.age = 25
 //        })
     }
+
+    @PostMapping("/login")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    fun testLogin(){
+
+    }
+
+
 }
