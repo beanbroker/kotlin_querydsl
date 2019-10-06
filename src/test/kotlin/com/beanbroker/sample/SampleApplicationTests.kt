@@ -5,8 +5,8 @@ import com.beanbroker.sample.api.user.domain.User
 import com.beanbroker.sample.api.user.entity.UserEntity
 import com.beanbroker.sample.api.user.service.UserCreateService
 import com.beanbroker.sample.api.user.service.UserGetService
-import com.beanbroker.sample.api.user.service.UserUpdateService
 import com.beanbroker.sample.api.user.service.UserTermService
+import com.beanbroker.sample.api.user.service.UserUpdateService
 import junit.framework.Assert.assertEquals
 import junit.framework.Assert.assertNotNull
 import org.junit.Test

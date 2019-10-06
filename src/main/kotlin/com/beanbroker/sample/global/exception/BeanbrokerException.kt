@@ -1,8 +1,5 @@
 package com.beanbroker.sample.global.exception
 
-import java.lang.RuntimeException
-
-
 
 open class BeanbrokerException : RuntimeException() {
 

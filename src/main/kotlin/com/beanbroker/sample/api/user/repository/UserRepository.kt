@@ -1,8 +1,8 @@
 package com.beanbroker.sample.api.user.repository
 
+import com.beanbroker.sample.api.user.entity.UserEntity
 import com.beanbroker.sample.entity.QUserEntity
 import com.beanbroker.sample.entity.QUserTermEntity
-import com.beanbroker.sample.api.user.entity.UserEntity
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport
 

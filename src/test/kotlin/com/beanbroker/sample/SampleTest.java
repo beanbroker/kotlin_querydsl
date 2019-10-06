@@ -1,6 +1,5 @@
 package com.beanbroker.sample;
 
-import org.junit.BeforeClass;
 import org.junit.jupiter.api.*;
 
 public class SampleTest {

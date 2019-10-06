@@ -1,6 +1,5 @@
 package com.beanbroker.sample.api.auth
 
-import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 

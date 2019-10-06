@@ -1,7 +1,7 @@
 package com.beanbroker.sample.api.user.repository
 
-import com.beanbroker.sample.entity.QUserTermEntity
 import com.beanbroker.sample.api.user.entity.UserTermEntity
+import com.beanbroker.sample.entity.QUserTermEntity
 import com.querydsl.core.BooleanBuilder
 import com.querydsl.core.types.Predicate
 import org.springframework.data.jpa.repository.JpaRepository
